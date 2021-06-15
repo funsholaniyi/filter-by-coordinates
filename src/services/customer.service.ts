@@ -7,7 +7,6 @@ export class CustomerService {
     private customers: CustomerModel[] = [];
 
     /**
-     *
      * @param utilityService
      */
     public constructor(private utilityService: UtilityService) {
@@ -19,18 +18,37 @@ export class CustomerService {
      */
     public static textToCustomer(customerStr: string): CustomerModel {
         const result: any = {};
-        if(!customerStr){
+        if (!customerStr) {
             return result;
         }
         const dataPoints = customerStr.split(",");
         dataPoints.forEach(item => {
-            item = item.trim();
             const items = item.split(":")
-            const key = items[0];
-            const value = items[1];
+            const key = items[0].trim();
+            const value = items[1].trim();
             result[key] = value;
         })
         return <CustomerModel>result;
+    }
+
+    /**
+     *
+     * @param customers
+     * @private
+     */
+    private static sortCustomersById(customers: CustomerModel[]): CustomerModel[] {
+        if (!customers.length) {
+            return customers;
+        }
+        return customers.sort((a, b) => {
+            if (a.id < b.id) {
+                return -1;
+            } else if (a.id > b.id) {
+                return 1;
+            } else {
+                return 0;
+            }
+        })
     }
 
     public loadCustomers(customers: CustomerModel[]) {
@@ -43,8 +61,8 @@ export class CustomerService {
      * @param distance
      */
     public filterCustomerByDistance(startCoordinates: CoordinateModel, distance: number): CustomerModel[] {
-        if(!this.customers.length){
-            throw 'Please load the customers data before calling the filter method';
+        if (!this.customers.length) {
+            throw "Please load the customers data before calling the filter method";
         }
         const filtered = this.customers.filter((customer: CustomerModel) => {
             const {id, ...stopCoordinates} = customer;
@@ -53,26 +71,6 @@ export class CustomerService {
         })
 
         return CustomerService.sortCustomersById(filtered);
-    }
-
-    /**
-     *
-     * @param customers
-     * @private
-     */
-    private static sortCustomersById(customers: CustomerModel[]): CustomerModel[] {
-        if(!customers.length){
-            return customers;
-        }
-        return customers.sort((a, b) => {
-            if (a.id < b.id) {
-                return -1;
-            } else if (a.id > b.id) {
-                return 1;
-            } else {
-                return 0;
-            }
-        })
     }
 
 }
