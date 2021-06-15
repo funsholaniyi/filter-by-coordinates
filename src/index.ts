@@ -29,7 +29,7 @@ function start() {
 
             // filter as needed
             customers = customerService.filterCustomerByDistance(companyLocation, distanceLimit);
-            console.log(customers);
+            return customers;
         }
 
     } catch (e) {
@@ -38,4 +38,5 @@ function start() {
 
 }
 
-start();
+const customers  = start();
+console.log(customers)
